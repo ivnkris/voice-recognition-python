@@ -32,3 +32,16 @@ def recognise_speech_from_mic(recogniser, microphone):
         response["error"] = "Unable to recognise speech"
 
     return response
+
+if __name__ == "__main__":
+    # create recogniser and microphone instances
+    recogniser = sr.Recogniser()
+    microphone = sr.Microphone()
+
+    speech = recognise_speech_from_mic(recogniser, microphone)
+
+    # if there was an error print error message
+    if speech["error"]:
+        print("ERROR: {}".format(speech["error"]))
+    else:
+        print("You said: {}".format(speech["transcription"]))
