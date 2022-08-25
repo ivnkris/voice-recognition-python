@@ -1,17 +1,17 @@
 import speech_recognition as sr
 
-def recognise_speech_from_mic(recogniser, microphone):
-    # check that recogniser and microphone are appropriate SpeechRecognition instances
-    if not isinstance(recogniser, sr.Recogniser):
-        raise TypeError("recogniser must be a SpeechRecognition Recogniser instance")
+def recognize_speech_from_mic(recognizer, microphone):
+    # check that recognizer and microphone are appropriate SpeechRecognition instances
+    if not isinstance(recognizer, sr.Recognizer):
+        raise TypeError("recognizer must be a SpeechRecognition Recognizer instance")
 
     if not isinstance(microphone, sr.Microphone):
         raise TypeError("microphone must be a SpeechRecognition Microphone instance")
 
     # adjust for ambient noise and record audio from microphone
     with microphone as source:
-        recogniser.adjust_for_ambient_noise(source)
-        audio = recogniser.listen(source)
+        recognizer.adjust_for_ambient_noise(source, duration=0.5)
+        audio = recognizer.listen(source)
 
     # initialise response object
     response = {
@@ -20,25 +20,25 @@ def recognise_speech_from_mic(recogniser, microphone):
         "transcription": None
     }
 
-    # try recognising speech from mic recording
+    # try recognizing speech from mic recording
     try:
-        response["transcription"] = recogniser.recognise_google(audio)
+        response["transcription"] = recognizer.recognize_google(audio)
     except sr.RequestError:
         # API unreachable or unresponsive
         response["success"] = False
         response["error"] = "API unavailable"
     except sr.UnknownValueError:
         # speech unintelligible
-        response["error"] = "Unable to recognise speech"
+        response["error"] = "Unable to recognize speech"
 
     return response
 
 if __name__ == "__main__":
-    # create recogniser and microphone instances
-    recogniser = sr.Recogniser()
+    # create recognizer and microphone instances
+    recognizer = sr.Recognizer()
     microphone = sr.Microphone()
 
-    speech = recognise_speech_from_mic(recogniser, microphone)
+    speech = recognize_speech_from_mic(recognizer, microphone)
 
     # if there was an error print error message
     if speech["error"]:
